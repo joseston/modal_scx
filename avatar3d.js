@@ -34,17 +34,11 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
   rimLight.position.set(0, 4, -5);
   scene.add(rimLight);
 
-  const floorMaterial = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    roughness: 0.72,
-    metalness: 0.02
-  });
-
   const pedestal = new THREE.Mesh(
     new THREE.CylinderGeometry(1.25, 1.52, 0.11, 64),
-    floorMaterial
+    new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.72, metalness: 0.02 })
   );
-  pedestal.position.y = -3.18;
+  pedestal.position.y = -3.0;
   pedestal.receiveShadow = true;
   scene.add(pedestal);
 
@@ -53,11 +47,11 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
     new THREE.MeshBasicMaterial({ color: 0x91c9ce, transparent: true, opacity: 0.65 })
   );
   floorRing.rotation.x = Math.PI / 2;
-  floorRing.position.y = -3.115;
+  floorRing.position.y = -2.94;
   scene.add(floorRing);
 
   const avatar = new THREE.Group();
-  avatar.position.y = -0.05;
+  avatar.position.y = -0.38;
   scene.add(avatar);
 
   let currentGender = initialGender;
@@ -99,8 +93,11 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
   function addCylinderBetween(parent, start, end, radiusTop, radiusBottom, material = bodyMaterial) {
     const direction = new THREE.Vector3().subVectors(end, start);
     const length = direction.length();
-    const geometry = new THREE.CylinderGeometry(radiusTop, radiusBottom, length, 24, 1, false);
-    const mesh = new THREE.Mesh(geometry, material);
+    const mesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(radiusTop, radiusBottom, length, 24, 1, false),
+      material
+    );
+
     mesh.position.copy(start).add(end).multiplyScalar(0.5);
     mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.clone().normalize());
     mesh.castShadow = true;
@@ -124,7 +121,7 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
 
     avatar.traverse(object => {
       if (object.geometry) geometries.add(object.geometry);
-      if (Array.isArray(object.material)) object.material.forEach(mat => materials.add(mat));
+      if (Array.isArray(object.material)) object.material.forEach(material => materials.add(material));
       else if (object.material) materials.add(object.material);
     });
 
@@ -134,7 +131,7 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
   }
 
   function buildHead(gender) {
-    const head = addEllipsoid(
+    addEllipsoid(
       avatar,
       0.43,
       { x: 0.78, y: 1.02, z: 0.82 },
@@ -147,7 +144,6 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
     );
     facePanel.scale.set(1.45, 0.5, 0.28);
     facePanel.position.set(0, 2.43, 0.345);
-    facePanel.castShadow = false;
     avatar.add(facePanel);
 
     const neck = new THREE.Mesh(
@@ -157,8 +153,6 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
     neck.position.set(0, 1.92, 0);
     neck.castShadow = true;
     avatar.add(neck);
-
-    return head;
   }
 
   function buildTorso(gender) {
@@ -268,7 +262,7 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
     buildLeg('left', gender);
     buildLeg('right', gender);
 
-    avatar.scale.setScalar(0.92);
+    avatar.scale.setScalar(0.84);
     avatar.rotation.y = targetRotation;
   }
 
@@ -325,7 +319,7 @@ export function createAvatar3D({ canvas, container, initialGender = 'female' }) 
     if (!dragging) targetRotation += 0.00045;
 
     avatar.rotation.y += (targetRotation - avatar.rotation.y) * 0.075;
-    avatar.position.y = -0.05 + Math.sin(elapsed * 1.2) * 0.012;
+    avatar.position.y = -0.38 + Math.sin(elapsed * 1.2) * 0.012;
     floorRing.scale.setScalar(1 + Math.sin(elapsed * 1.7) * 0.012);
 
     renderer.render(scene, camera);
