@@ -37,7 +37,6 @@
       <aside class="viewer-panel">
         <div class="viewer-header">
           <div class="eyebrow">Paciente</div>
-          <h2>Perfil corporal 3D</h2>
           <p>Selecciona el sexo del paciente y gira el modelo para revisar la vista.</p>
         </div>
 
@@ -53,27 +52,26 @@
 
       <div class="form-panel">
         <header class="modal-top">
-          <div>
+          <div class="modal-heading">
             <h1 id="modalTitle">Aperturar historia clínica</h1>
-            <p>Registra los datos del paciente y su número de historia clínica.</p>
+            <p>Registra los datos principales del paciente.</p>
           </div>
+
+          <div class="history-header-field">
+            <label for="historyNumber">Número de historia clínica</label>
+            <div class="history-control">
+              <input id="historyNumber" name="historyNumber" form="patientForm" placeholder="N.º de historia" />
+              <button class="secondary-btn compact" id="suggestBtn" type="button">Sugerir</button>
+            </div>
+            <div class="history-helper">Conserva el número físico si ya existe.</div>
+          </div>
+
           <button class="close-btn" id="closeBtn" type="button" aria-label="Cerrar">×</button>
         </header>
 
         <form id="patientForm">
           <div class="form-scroll">
             <div class="grid">
-              <div class="field">
-                <label for="historyNumber">Número de historia clínica</label>
-                <input id="historyNumber" name="historyNumber" placeholder="Ingresa el número de la historia física" />
-                <div class="helper">
-                  Si existe una historia física, conserva su número. Si es nueva, puedes solicitar una sugerencia.
-                </div>
-                <div class="suggest-row">
-                  <button class="secondary-btn" id="suggestBtn" type="button">Sugerir número para historia nueva</button>
-                </div>
-              </div>
-
               <div class="field">
                 <label for="documentType">Tipo de documento</label>
                 <select id="documentType" name="documentType">
@@ -122,8 +120,8 @@
               </div>
 
               <div class="field span-2">
-                <label for="address">Dirección</label>
-                <input id="address" name="address" placeholder="Av., calle, número" />
+                <label for="occupation">Ocupación</label>
+                <input id="occupation" name="occupation" placeholder="Ej. Administradora, docente, independiente" />
               </div>
 
               <div class="field">
@@ -134,6 +132,11 @@
               <div class="field">
                 <label for="district">Distrito</label>
                 <input id="district" name="district" placeholder="Ej. Surco" />
+              </div>
+
+              <div class="field span-2">
+                <label for="address">Dirección</label>
+                <input id="address" name="address" placeholder="Av., calle, número" />
               </div>
             </div>
           </div>
