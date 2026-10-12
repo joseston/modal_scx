@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Historia Clínica · Modal 3D</title>
+  <meta name="description" content="Prototipo interactivo de apertura de historia clínica con selector 3D de sexo." />
+  <style>
+    :root {
+      --teal: #217b84;
+      --teal-dark: #175f67;
+      --teal-soft: #e9f6f7;
+      --ink: #182230;
+      --muted: #6b7280;
+      --line: #dfe4ea;
+      --surface: #ffffff;
+      --page: #f3f6f8;
+      --female: #ef77a8;
+      --female-soft: #fff0f6;
+      --male: #5599ef;
+      --male-soft: #eef6ff;
+      --shadow: 0 28px 80px rgba(11, 28, 38, .24);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--page); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 112px 1fr;
+      background: #f7f9fa;
+    }
+
+    .sidebar {
+      padding: 28px 14px;
+      background: #0d4147;
+      color: white;
+    }
+    .brand { font-weight: 800; letter-spacing: .08em; font-size: 12px; opacity: .9; margin-bottom: 30px; }
+    .nav-item { height: 58px; border-radius: 14px; background: rgba(255,255,255,.08); margin-bottom: 12px; opacity: .72; }
+    .nav-item.active { background: rgba(255,255,255,.19); opacity: 1; }
+
+    .content { padding: 38px 48px; overflow: hidden; }
+    .fake-card { background: white; border: 1px solid #edf0f3; border-radius: 18px; padding: 22px; box-shadow: 0 8px 22px rgba(23, 42, 56, .04); }
+    .fake-title { width: 310px; height: 26px; border-radius: 7px; background: #d9e0e4; margin-bottom: 12px; }
+    .fake-subtitle { width: 440px; height: 12px; border-radius: 6px; background: #edf1f3; }
+    .fake-tabs { display: flex; gap: 18px; margin: 28px 0 18px; }
+    .fake-tab { width: 100px; height: 16px; border-radius: 6px; background: #dfe5e8; }
+    .fake-table { height: 520px; border-radius: 18px; background: linear-gradient(#fff, #fbfcfd); border: 1px solid #edf0f2; position: relative; overflow: hidden; }
+    .fake-table::before { content: ""; position: absolute; inset: 56px 20px auto; height: 1px; background: #eef1f2; box-shadow: 0 64px #eef1f2, 0 128px #eef1f2, 0 192px #eef1f2, 0 256px #eef1f2, 0 320px #eef1f2, 0 384px #eef1f2; }
+
+    .scrim { position: fixed; inset: 0; background: rgba(9, 16, 20, .72); backdrop-filter: blur(1.5px); display: grid; place-items: center; padding: 22px; }
+
+    .modal {
+      width: min(1240px, 96vw);
+      height: min(760px, 94vh);
+      background: var(--surface);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.6);
+      display: grid;
+      grid-template-columns: 410px 1fr;
+      position: relative;
+    }
+
+    .viewer-panel {
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 34%, rgba(255,255,255,.98) 0 20%, rgba(239,249,250,.9) 54%, rgba(222,241,243,.9) 100%);
+      border-right: 1px solid #e5ecee;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .viewer-header { position: absolute; z-index: 3; top: 26px; left: 26px; right: 26px; }
+    .eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: #5f7a7e; font-weight: 800; margin-bottom: 8px; }
+    .viewer-header h2 { margin: 0; font-size: 22px; letter-spacing: -.02em; }
+    .viewer-header p { margin: 8px 0 0; color: #6a7d80; font-size: 13px; line-height: 1.45; }
+
+    #scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+
+    .gender-switch {
+      position: absolute;
+      z-index: 4;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 7px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(191, 208, 211, .72);
+      box-shadow: 0 12px 35px rgba(20, 50, 58, .12);
+      backdrop-filter: blur(14px);
+    }
+    .gender-btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 11px 12px;
+      background: transparent;
+      color: #526166;
+      font-weight: 750;
+      transition: .18s ease;
+    }
+    .gender-btn[data-gender="female"].active { background: var(--female-soft); color: #b84373; box-shadow: inset 0 0 0 1px rgba(239,119,168,.24); }
+    .gender-btn[data-gender="male"].active { background: var(--male-soft); color: #2e70bd; box-shadow: inset 0 0 0 1px rgba(85,153,239,.24); }
+
+    .viewer-hint {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 94px;
+      white-space: nowrap;
+      color: #688084;
+      font-size: 11px;
+      background: rgba(255,255,255,.72);
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(203,217,220,.8);
+    }
+
+    .form-panel { display: flex; flex-direction: column; min-width: 0; background: white; }
+    .modal-top { padding: 24px 28px 18px; border-bottom: 1px solid #edf0f2; display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .modal-top h1 { margin: 0; font-size: 20px; letter-spacing: -.02em; }
+    .modal-top p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+    .close-btn { width: 34px; height: 34px; border: 0; border-radius: 10px; background: transparent; color: #657078; font-size: 22px; line-height: 1; }
+    .close-btn:hover { background: #f4f6f7; }
+
+    form { display: flex; flex-direction: column; min-height: 0; flex: 1; }
+    .form-scroll { padding: 22px 28px; overflow: auto; flex: 1; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
+    .field.span-2 { grid-column: span 2; }
+    label { display: block; font-size: 12px; font-weight: 650; color: #39485e; margin-bottom: 7px; }
+    .input-wrap { position: relative; }
+    input, select {
+      width: 100%;
+      height: 42px;
+      border: 1px solid #d7dee5;
+      border-radius: 10px;
+      background: white;
+      padding: 0 12px;
+      outline: none;
+      color: #1f2937;
+      transition: border-color .16s ease, box-shadow .16s ease;
+    }
+    input:focus, select:focus { border-color: #65aeb6; box-shadow: 0 0 0 3px rgba(33,123,132,.10); }
+    input::placeholder { color: #a0aab7; }
+    .helper { color: #6b7788; font-size: 11px; line-height: 1.45; margin-top: 6px; }
+
+    .suggest-row { display: flex; align-items: center; gap: 9px; margin-top: 9px; }
+    .secondary-btn { border: 1px solid #b9dce0; background: #effafb; color: #246f77; border-radius: 9px; padding: 9px 12px; font-size: 12px; font-weight: 700; }
+    .secondary-btn:hover { background: #e5f6f8; }
+
+    .age-pill { color: #53677b; font-weight: 600; }
+
+    .actions { padding: 16px 28px 20px; border-top: 1px solid #edf0f2; display: flex; justify-content: flex-end; gap: 10px; background: #fff; }
+    .btn { height: 42px; border-radius: 10px; padding: 0 18px; font-weight: 750; border: 1px solid transparent; }
+    .btn.cancel { background: white; border-color: #dce2e7; color: #39424e; }
+    .btn.save { background: var(--teal); color: white; box-shadow: 0 8px 18px rgba(33,123,132,.18); }
+    .btn.save:hover { background: var(--teal-dark); }
+
+    .status-chip {
+      position: absolute;
+      top: 138px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .03em;
+      transition: .2s ease;
+    }
+    .status-chip.female { color: #ac3e6a; background: rgba(255,240,246,.92); border: 1px solid rgba(239,119,168,.28); }
+    .status-chip.male { color: #2e6baa; background: rgba(238,246,255,.92); border: 1px solid rgba(85,153,239,.28); }
+
+    .toast {
+      position: fixed;
+      right: 28px;
+      bottom: 28px;
+      min-width: 290px;
+      background: #163f44;
+      color: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      box-shadow: 0 16px 42px rgba(0,0,0,.25);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: .22s ease;
+      font-size: 13px;
+      z-index: 20;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 980px) {
+      .modal { grid-template-columns: 320px 1fr; }
+      .viewer-header h2 { font-size: 19px; }
+    }
+    @media (max-width: 760px) {
+      .scrim { padding: 10px; align-items: start; overflow: auto; }
+      .modal { width: 100%; height: auto; min-height: calc(100vh - 20px); grid-template-columns: 1fr; grid-template-rows: 330px auto; }
+      .viewer-panel { border-right: 0; border-bottom: 1px solid #e5ecee; }
+      .viewer-hint { display: none; }
+      .gender-switch { left: 16px; right: 16px; bottom: 14px; }
+      .status-chip { top: 90px; }
+      .grid { grid-template-columns: 1fr; }
+      .field.span-2 { grid-column: span 1; }
+      .form-scroll { overflow: visible; padding: 20px; }
+      .modal-top, .actions { padding-left: 20px; padding-right: 20px; }
+      .actions { position: sticky; bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app-shell" aria-hidden="true">
+    <aside class="sidebar">
+      <div class="brand">CIATOB</div>
+      <div class="nav-item active"></div>
+      <div class="nav-item"></div><div class="nav-item"></div><div class="nav-item"></div><div class="nav-item"></div>
+    </aside>
+    <section class="content">
+      <div class="fake-card"><div class="fake-title"></div><div class="fake-subtitle"></div></div>
+      <div class="fake-tabs"><div class="fake-tab"></div><div class="fake-tab"></div><div class="fake-tab"></div></div>
+      <div class="fake-table"></div>
+    </section>
+  </main>
+
+  <div class="scrim" id="scrim">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <aside class="viewer-panel">
+        <div class="viewer-header">
+          <div class="eyebrow">Paciente</div>
+          <h2>Perfil corporal 3D</h2>
+          <p>Selecciona el sexo del paciente y gira el modelo para revisar la vista.</p>
+        </div>
+        <div class="status-chip female" id="statusChip">Femenino · vista 3D</div>
+        <canvas id="scene" aria-label="Modelo humano 3D interactivo"></canvas>
+        <div class="viewer-hint">Arrastra para girar · rueda para acercar</div>
+        <div class="gender-switch" role="group" aria-label="Seleccionar sexo">
+          <button class="gender-btn active" type="button" data-gender="female">♀ Mujer</button>
+          <button class="gender-btn" type="button" data-gender="male">♂ Hombre</button>
+        </div>
+      </aside>
+
+      <div class="form-panel">
+        <header class="modal-top">
+          <div>
+            <h1 id="modalTitle">Aperturar historia clínica</h1>
+            <p>Registra los datos del paciente y su número de historia clínica.</p>
+          </div>
+          <button class="close-btn" id="closeBtn" type="button" aria-label="Cerrar">×</button>
+        </header>
+
+        <form id="patientForm">
+          <div class="form-scroll">
+            <div class="grid">
+              <div class="field">
+                <label for="historyNumber">Número de historia clínica</label>
+                <input id="historyNumber" name="historyNumber" placeholder="Ingresa el número de la historia física" />
+                <div class="helper">Si existe una historia física, conserva su número. Si es nueva, puedes solicitar una sugerencia.</div>
+                <div class="suggest-row"><button class="secondary-btn" id="suggestBtn" type="button">Sugerir número para historia nueva</button></div>
+              </div>
+
+              <div class="field">
+                <label for="documentType">Tipo de documento</label>
+                <select id="documentType" name="documentType"><option>DNI</option><option>CE</option><option>Pasaporte</option></select>
+              </div>
+
+              <div class="field">
+                <label for="documentNumber">Número de documento</label>
+                <input id="documentNumber" name="documentNumber" inputmode="numeric" value="04436497" />
+              </div>
+
+              <div class="field">
+                <label for="names">Nombres</label>
+                <input id="names" name="names" value="GENOVEVA DE LOURDES" />
+              </div>
+
+              <div class="field">
+                <label for="lastNames">Apellidos</label>
+                <input id="lastNames" name="lastNames" value="FLORES YABAR DE VALDEZ" />
+              </div>
+
+              <div class="field">
+                <label for="birthDate">Fecha de nacimiento <span class="age-pill" id="ageLabel">(61 años)</span></label>
+                <input id="birthDate" name="birthDate" type="date" value="1965-05-21" />
+              </div>
+
+              <div class="field">
+                <label for="sexSelect">Sexo</label>
+                <select id="sexSelect" name="sex"><option value="female" selected>Femenino</option><option value="male">Masculino</option></select>
+              </div>
+
+              <div class="field">
+                <label for="phone">Celular</label>
+                <input id="phone" name="phone" inputmode="tel" value="971922125" />
+              </div>
+
+              <div class="field">
+                <label for="email">Correo</label>
+                <input id="email" name="email" type="email" placeholder="paciente@correo.com" />
+              </div>
+
+              <div class="field span-2">
+                <label for="address">Dirección</label>
+                <input id="address" name="address" placeholder="Av., calle, número" />
+              </div>
+
+              <div class="field">
+                <label for="city">Ciudad</label>
+                <input id="city" name="city" value="Lima" />
+              </div>
+
+              <div class="field">
+                <label for="district">Distrito</label>
+                <input id="district" name="district" placeholder="Ej. Surco" />
+              </div>
+            </div>
+          </div>
+
+          <footer class="actions">
+            <button class="btn cancel" id="cancelBtn" type="button">Cancelar</button>
+            <button class="btn save" type="submit">Guardar historia clínica</button>
+          </footer>
+        </form>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast">Historia clínica guardada correctamente.</div>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+
+    const canvas = document.getElementById('scene');
+    const panel = canvas.parentElement;
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+    camera.position.set(0, 1.0, 8.6);
+
+    const hemi = new THREE.HemisphereLight(0xffffff, 0xb6d1d4, 2.6);
+    scene.add(hemi);
+    const key = new THREE.DirectionalLight(0xffffff, 3.0);
+    key.position.set(3.8, 7, 5.5);
+    key.castShadow = true;
+    scene.add(key);
+    const rim = new THREE.DirectionalLight(0xb6ecf0, 1.7);
+    rim.position.set(-5, 3, -2);
+    scene.add(rim);
+
+    const pedestal = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.55, 1.9, .16, 64),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: .76, metalness: .04 })
+    );
+    pedestal.position.y = -2.37;
+    pedestal.receiveShadow = true;
+    scene.add(pedestal);
+
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(1.42, .018, 10, 90),
+      new THREE.MeshBasicMaterial({ color: 0x84c4ca, transparent: true, opacity: .65 })
+    );
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = -2.27;
+    scene.add(ring);
+
+    const person = new THREE.Group();
+    person.position.y = -.08;
+    scene.add(person);
+
+    let currentGender = 'female';
+    let bodyMaterial;
+
+    function capsule(radius, length, material) {
+      const g = new THREE.CapsuleGeometry(radius, length, 8, 18);
+      const m = new THREE.Mesh(g, material);
+      m.castShadow = true;
+      return m;
+    }
+
+    function addLimb(group, radius, length, x, y, z, rotationZ = 0) {
+      const limb = capsule(radius, length, bodyMaterial);
+      limb.position.set(x, y, z);
+      limb.rotation.z = rotationZ;
+      group.add(limb);
+      return limb;
+    }
+
+    function clearPerson() {
+      while (person.children.length) {
+        const child = person.children.pop();
+        child.geometry?.dispose?.();
+        if (Array.isArray(child.material)) child.material.forEach(m => m.dispose?.());
+        else child.material?.dispose?.();
+      }
+    }
+
+    function buildPerson(gender) {
+      clearPerson();
+      const female = gender === 'female';
+      const color = new THREE.Color(female ? '#ef77a8' : '#5599ef');
+      bodyMaterial = new THREE.MeshStandardMaterial({ color, roughness: .46, metalness: .05, envMapIntensity: .8 });
+
+      const torso = capsule(female ? .54 : .61, 1.24, bodyMaterial);
+      torso.scale.set(female ? .90 : 1.06, 1, female ? .74 : .82);
+      torso.position.y = .42;
+      person.add(torso);
+
+      const pelvis = capsule(female ? .51 : .45, .48, bodyMaterial);
+      pelvis.scale.set(female ? 1.18 : 1.06, .72, .80);
+      pelvis.position.y = -.68;
+      person.add(pelvis);
+
+      const neck = new THREE.Mesh(new THREE.CylinderGeometry(.17, .2, .34, 24), bodyMaterial);
+      neck.position.y = 1.48;
+      neck.castShadow = true;
+      person.add(neck);
+
+      const head = new THREE.Mesh(new THREE.SphereGeometry(.45, 36, 28), bodyMaterial);
+      head.scale.set(.83, 1.08, .86);
+      head.position.y = 2.02;
+      head.castShadow = true;
+      person.add(head);
+
+      const shoulder = female ? .63 : .76;
+      addLimb(person, female ? .17 : .20, 1.08, -shoulder, .48, 0, -.13);
+      addLimb(person, female ? .17 : .20, 1.08, shoulder, .48, 0, .13);
+      addLimb(person, female ? .145 : .17, .86, -shoulder - .10, -.54, 0, -.02);
+      addLimb(person, female ? .145 : .17, .86, shoulder + .10, -.54, 0, .02);
+
+      const legX = female ? .28 : .25;
+      addLimb(person, female ? .22 : .24, 1.42, -legX, -1.34, 0, .025);
+      addLimb(person, female ? .22 : .24, 1.42, legX, -1.34, 0, -.025);
+      addLimb(person, female ? .18 : .20, 1.02, -legX, -2.35, .02, 0);
+      addLimb(person, female ? .18 : .20, 1.02, legX, -2.35, .02, 0);
+
+      const footGeo = new THREE.CapsuleGeometry(female ? .18 : .20, .36, 6, 16);
+      [-legX, legX].forEach(x => {
+        const foot = new THREE.Mesh(footGeo.clone(), bodyMaterial);
+        foot.rotation.x = Math.PI / 2;
+        foot.position.set(x, -2.93, .12);
+        foot.castShadow = true;
+        person.add(foot);
+      });
+
+      const accent = new THREE.MeshBasicMaterial({ color: female ? 0xffc4dc : 0xbad9ff, transparent: true, opacity: .52 });
+      const halo = new THREE.Mesh(new THREE.TorusGeometry(female ? .73 : .81, .018, 10, 90), accent);
+      halo.rotation.x = Math.PI / 2;
+      halo.position.y = .4;
+      person.add(halo);
+    }
+
+    function resize() {
+      const w = panel.clientWidth;
+      const h = panel.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(panel);
+    resize();
+
+    let dragging = false;
+    let lastX = 0;
+    let targetRotation = .22;
+    canvas.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      targetRotation += (e.clientX - lastX) * .009;
+      lastX = e.clientX;
+    });
+    canvas.addEventListener('pointerup', () => dragging = false);
+    canvas.addEventListener('pointercancel', () => dragging = false);
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      camera.position.z = THREE.MathUtils.clamp(camera.position.z + e.deltaY * .004, 6.4, 10.2);
+    }, { passive: false });
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const t = clock.getElapsedTime();
+      if (!dragging) targetRotation += .00065;
+      person.rotation.y += (targetRotation - person.rotation.y) * .08;
+      person.position.y = -.07 + Math.sin(t * 1.25) * .022;
+      ring.scale.setScalar(1 + Math.sin(t * 1.8) * .018);
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    const sexSelect = document.getElementById('sexSelect');
+    const genderButtons = [...document.querySelectorAll('.gender-btn')];
+    const statusChip = document.getElementById('statusChip');
+
+    function setGender(gender) {
+      currentGender = gender;
+      buildPerson(gender);
+      sexSelect.value = gender;
+      genderButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.gender === gender));
+      statusChip.className = `status-chip ${gender}`;
+      statusChip.textContent = gender === 'female' ? 'Femenino · vista 3D' : 'Masculino · vista 3D';
+      targetRotation = .22;
+    }
+
+    genderButtons.forEach(btn => btn.addEventListener('click', () => setGender(btn.dataset.gender)));
+    sexSelect.addEventListener('change', e => setGender(e.target.value));
+    setGender('female');
+    animate();
+
+    const historyInput = document.getElementById('historyNumber');
+    document.getElementById('suggestBtn').addEventListener('click', () => {
+      historyInput.value = `HC-2026-${String(Math.floor(10000 + Math.random() * 89999))}`;
+      historyInput.focus();
+    });
+
+    function updateAge() {
+      const value = document.getElementById('birthDate').value;
+      const label = document.getElementById('ageLabel');
+      if (!value) { label.textContent = ''; return; }
+      const birth = new Date(`${value}T00:00:00`);
+      const now = new Date();
+      let age = now.getFullYear() - birth.getFullYear();
+      const m = now.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+      label.textContent = `(${age} años)`;
+    }
+    document.getElementById('birthDate').addEventListener('change', updateAge);
+    updateAge();
+
+    const toast = document.getElementById('toast');
+    const form = document.getElementById('patientForm');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      console.table(data);
+      toast.textContent = `Historia clínica guardada · ${currentGender === 'female' ? 'Paciente femenino' : 'Paciente masculino'}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    });
+
+    function mockClose() {
+      toast.textContent = 'Demo: el modal se cerraría y volverías al listado de pacientes.';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+    document.getElementById('closeBtn').addEventListener('click', mockClose);
+    document.getElementById('cancelBtn').addEventListener('click', mockClose);
+  </script>
+</body>
+</html>
