@@ -51,20 +51,13 @@ export function PatientForm({ value, onChange }: PatientFormProps) {
       </div>
 
       <div className="field">
-        <label htmlFor="birthDate">
-          Fecha de nacimiento {age !== null && <span className="age-pill">({age} años)</span>}
-        </label>
+        <label htmlFor="birthDate">Fecha de nacimiento {age !== null && <span className="age-pill">({age} años)</span>}</label>
         <input id="birthDate" name="birthDate" type="date" value={value.birthDate} onChange={updateField} />
       </div>
 
       <div className="field">
         <label htmlFor="sex">Sexo</label>
-        <select
-          id="sex"
-          name="sex"
-          value={value.sex}
-          onChange={event => onChange({ ...value, sex: event.target.value as Gender })}
-        >
+        <select id="sex" name="sex" value={value.sex} onChange={event => onChange({ ...value, sex: event.target.value as Gender })}>
           <option value="female">Femenino</option>
           <option value="male">Masculino</option>
         </select>
@@ -82,14 +75,35 @@ export function PatientForm({ value, onChange }: PatientFormProps) {
 
       <div className="field span-2">
         <label htmlFor="occupation">Ocupación</label>
-        <input
-          id="occupation"
-          name="occupation"
-          value={value.occupation}
-          onChange={updateField}
-          placeholder="Ej. Administradora, docente, independiente"
-        />
+        <input id="occupation" name="occupation" value={value.occupation} onChange={updateField} placeholder="Ej. Administradora, docente, independiente" />
       </div>
+
+      <section className="supplementary-section field span-2" aria-labelledby="supplementary-data-title">
+        <div className="supplementary-heading" id="supplementary-data-title">Datos complementarios</div>
+        <div className="supplementary-grid">
+          <div className="field">
+            <label htmlFor="maritalStatus">Estado civil</label>
+            <select id="maritalStatus" name="maritalStatus" value={value.maritalStatus} onChange={updateField}>
+              <option value="">Seleccionar</option>
+              <option value="Soltero/a">Soltero/a</option>
+              <option value="Casado/a">Casado/a</option>
+              <option value="Conviviente">Conviviente</option>
+              <option value="Divorciado/a">Divorciado/a</option>
+              <option value="Viudo/a">Viudo/a</option>
+            </select>
+          </div>
+
+          <div className="field">
+            <label htmlFor="race">Raza</label>
+            <input id="race" name="race" value={value.race} onChange={updateField} placeholder="Opcional" />
+          </div>
+
+          <div className="field">
+            <label htmlFor="ethnicity">Etnicidad</label>
+            <input id="ethnicity" name="ethnicity" value={value.ethnicity} onChange={updateField} placeholder="Opcional" />
+          </div>
+        </div>
+      </section>
 
       <div className="field">
         <label htmlFor="city">Ciudad</label>
