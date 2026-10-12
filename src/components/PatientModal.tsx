@@ -14,6 +14,9 @@ const INITIAL_PATIENT: PatientFormData = {
   phone: '971922125',
   email: '',
   occupation: '',
+  maritalStatus: '',
+  race: '',
+  ethnicity: '',
   city: 'Lima',
   district: '',
   address: ''
