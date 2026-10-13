@@ -1,5 +1,3 @@
-import { PatientInfoCard } from './PatientInfoCard';
-
 interface BillingCardProps {
   expanded: boolean;
   onToggle: () => void;
@@ -7,31 +5,33 @@ interface BillingCardProps {
 
 export function BillingCard({ expanded, onToggle }: BillingCardProps) {
   return (
-    <button
-      type="button"
-      className={`patient-info-card billing billing-card${expanded ? ' expanded' : ''}`}
-      onClick={onToggle}
-      aria-expanded={expanded}
-      aria-label="Desglosar datos de facturación"
-    >
-      <div className="patient-info-card-header">
+    <article className={`patient-info-card billing billing-card${expanded ? ' expanded' : ''}`}>
+      <button
+        type="button"
+        className="billing-card-trigger patient-info-card-header"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        aria-label="Desglosar datos de facturación"
+      >
         <span className="patient-info-icon" aria-hidden="true">S/</span>
         <div>
           <span>Administrativo</span>
           <h3>Datos de facturación</h3>
         </div>
         <span className="billing-chevron" aria-hidden="true">{expanded ? '−' : '+'}</span>
-      </div>
+      </button>
 
       {!expanded ? (
-        <div className="patient-info-table billing-summary">
-          <div className="patient-info-row"><span>Consultas</span><strong>S/ 1,860</strong></div>
-          <div className="patient-info-row"><span>Medicamentos</span><strong>S/ 4,920</strong></div>
-          <div className="patient-info-row"><span>Estado</span><strong>Al día</strong></div>
-          <div className="billing-open-hint">Click para desglosar</div>
-        </div>
+        <button type="button" className="billing-summary-button" onClick={onToggle}>
+          <div className="patient-info-table billing-summary">
+            <div className="patient-info-row"><span>Consultas</span><strong>S/ 1,860</strong></div>
+            <div className="patient-info-row"><span>Medicamentos</span><strong>S/ 4,920</strong></div>
+            <div className="patient-info-row"><span>Estado</span><strong>Al día</strong></div>
+            <div className="billing-open-hint">Click para desglosar</div>
+          </div>
+        </button>
       ) : (
-        <div className="billing-breakdown" onClick={event => event.stopPropagation()}>
+        <div className="billing-breakdown">
           <section className="billing-breakdown-panel consultations">
             <div className="billing-breakdown-heading">
               <span className="billing-breakdown-icon">C</span>
@@ -59,6 +59,6 @@ export function BillingCard({ expanded, onToggle }: BillingCardProps) {
           <button className="billing-collapse" type="button" onClick={onToggle}>Contraer</button>
         </div>
       )}
-    </button>
+    </article>
   );
 }
