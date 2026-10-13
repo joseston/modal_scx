@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Slide01Interactive } from './slides/Slide01Interactive';
 import { Slide02Ecosystem } from './slides/Slide02Ecosystem';
-import { Slide03 } from './slides/Slide03';
+import { Slide03HCE } from './slides/Slide03HCE';
 import './presentation.css';
 import './slides/interactive-slides.css';
 
 const slides = [
   { Component: Slide01Interactive, label: 'Paciente 360°', number: '01' },
   { Component: Slide02Ecosystem, label: 'Aplicaciones', number: '02' },
-  { Component: Slide03, label: 'Diapositiva 3', number: '03' }
+  { Component: Slide03HCE, label: 'Historia Clínica Electrónica', number: '03' }
 ];
 
 export function PresentationDeck() {
