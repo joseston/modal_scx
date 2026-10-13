@@ -1,0 +1,426 @@
+/* Slide 01 · conexiones animadas y tarjetas interactivas */
+.patient-map-v2 .smart-connector {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 24%;
+  height: 3px;
+  transform-origin: left center;
+  border-radius: 999px;
+  opacity: .34;
+  background: currentColor;
+}
+
+.patient-map-v2 .smart-connector::before {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 9px solid currentColor;
+}
+
+.patient-map-v2 .smart-connector::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 16%, transparent), 0 0 16px currentColor;
+  animation: connector-particle 4.8s cubic-bezier(.4,0,.2,1) infinite;
+}
+
+.patient-map-v2 .connector-demo { color: #35a7a0; transform: rotate(-145deg); }
+.patient-map-v2 .connector-billing { color: #f1a43b; transform: rotate(-35deg); }
+.patient-map-v2 .connector-medical { color: #6f7de8; transform: rotate(145deg); }
+.patient-map-v2 .connector-files { color: #e56c8b; transform: rotate(35deg); }
+.patient-map-v2 .connector-demo::after { animation-delay: 0s; }
+.patient-map-v2 .connector-billing::after { animation-delay: 1.2s; }
+.patient-map-v2 .connector-medical::after { animation-delay: 2.4s; }
+.patient-map-v2 .connector-files::after { animation-delay: 3.6s; }
+
+@keyframes connector-particle {
+  0%, 12% { left: 2%; opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+  22% { opacity: 1; }
+  58% { left: 96%; opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  68%, 100% { left: 100%; opacity: 0; transform: translate(-50%, -50%) scale(.7); }
+}
+
+.patient-map-v2 .patient-info-card {
+  transition: transform .28s ease, box-shadow .28s ease, width .28s ease;
+}
+
+.patient-map-v2 .patient-info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(27,49,59,.16);
+}
+
+.billing-card {
+  padding: 0;
+  text-align: left;
+}
+
+.billing-card-trigger {
+  width: 100%;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.billing-card-trigger > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.billing-chevron {
+  margin-left: auto;
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 27px;
+  border-radius: 8px;
+  color: #fff !important;
+  background: rgba(255,255,255,.18);
+  font-size: 18px !important;
+  line-height: 1;
+}
+
+.billing-summary-button {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.billing-open-hint {
+  padding: 6px 10px 7px;
+  border-top: 1px solid #f1e5d3;
+  color: #b06d1b;
+  background: #fff9f0;
+  font-size: clamp(7px,.52vw,9px);
+  font-weight: 850;
+  letter-spacing: .05em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.billing-card.expanded {
+  z-index: 10;
+  width: 36%;
+  box-shadow: 0 22px 50px rgba(91,57,11,.20);
+}
+
+.billing-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 8px;
+  background: linear-gradient(180deg,#fffdf9,#fff8ed);
+  animation: billing-expand .32s cubic-bezier(.2,.8,.2,1) both;
+}
+
+@keyframes billing-expand {
+  from { opacity: 0; transform: translateY(-5px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.billing-breakdown-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #f0dfc4;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(107,76,29,.07);
+}
+
+.billing-breakdown-panel.medicines {
+  border-color: #e9d7f4;
+  background: #fdf9ff;
+}
+
+.billing-breakdown-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border-bottom: 1px solid #f2e8d9;
+}
+
+.billing-breakdown-icon {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 25px;
+  border-radius: 7px;
+  color: #fff;
+  background: #eb9a32;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.medicines .billing-breakdown-icon { background: #9b6bc4; }
+.billing-breakdown-heading small { display: block; color: #aa8a61; font-size: 6px; font-weight: 850; letter-spacing: .1em; }
+.billing-breakdown-heading strong { display: block; color: #5a4328; font-size: 9px; }
+.medicines .billing-breakdown-heading strong { color: #60426e; }
+
+.billing-metric {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 7px;
+  border-bottom: 1px solid #f3eee7;
+  font-size: 7.5px;
+}
+.billing-metric span { color: #9a876e; }
+.billing-metric b { color: #463725; }
+
+.billing-collapse {
+  grid-column: 1 / -1;
+  height: 24px;
+  border: 0;
+  border-radius: 7px;
+  color: #9c651f;
+  background: #fff1dc;
+  font-size: 8px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.medical-card { animation-delay: .26s; }
+.medical-modules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 8px;
+  background: #f8f9ff;
+}
+
+.medical-module {
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid #dfe3fb;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow: 0 5px 12px rgba(76,88,170,.07);
+  animation: medical-module-in .45s ease both;
+}
+
+.medical-module.protocol { animation-delay: .14s; border-color: #d7e7fb; background: #f8fbff; }
+
+@keyframes medical-module-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.medical-module-topline { display: flex; align-items: center; gap: 6px; }
+.medical-module-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  border-radius: 7px;
+  color: #fff;
+  background: #6979de;
+  font-size: 8px;
+  font-weight: 900;
+}
+.protocol .medical-module-icon { background: #4c96cf; }
+.medical-module-topline strong { color: #3d497d; font-size: 8.5px; }
+.protocol .medical-module-topline strong { color: #386d91; }
+.medical-module-detail { margin-top: 6px; display: grid; gap: 1px; }
+.medical-module-detail span { color: #9aa2bd; font-size: 6.5px; }
+.medical-module-detail b { color: #535e91; font-size: 8px; }
+.medical-module small { display: block; margin-top: 4px; color: #8b94b0; font-size: 6.5px; }
+
+/* Slide 02 · ecosistema de aplicaciones */
+.app-ecosystem-slide {
+  justify-content: flex-start;
+  padding: clamp(26px,3vw,48px) clamp(32px,4vw,68px) clamp(30px,3vw,48px);
+  background:
+    radial-gradient(circle at 84% 16%, rgba(75,144,151,.12), transparent 24%),
+    linear-gradient(135deg,#fff 0%,#f8fbfc 100%);
+}
+
+.app-ecosystem-heading {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.app-ecosystem-heading .ppt-kicker { margin-bottom: 7px; font-size: clamp(9px,.68vw,11px); }
+.app-ecosystem-heading h2 { max-width: 850px; font-size: clamp(25px,2.8vw,44px); line-height: 1.04; }
+.app-ecosystem-badge {
+  padding: 8px 12px;
+  border: 1px solid #cfe1e5;
+  border-radius: 999px;
+  color: #47727a;
+  background: rgba(255,255,255,.86);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.app-ecosystem-grid {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: clamp(12px,1.5vw,22px);
+  align-items: center;
+  margin-top: 18px;
+}
+
+.app-ecosystem-card {
+  position: relative;
+  min-width: 0;
+  min-height: clamp(220px,28vh,310px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(18px,2.1vw,32px);
+  border: 1px solid #dce8ea;
+  border-radius: 20px;
+  background: rgba(255,255,255,.95);
+  box-shadow: 0 18px 42px rgba(24,53,62,.11);
+  animation: app-card-rise .58s cubic-bezier(.2,.8,.2,1) both;
+}
+
+.app-ecosystem-card:nth-child(2) { animation-delay: .16s; }
+.app-ecosystem-card:nth-child(3) { animation-delay: .32s; }
+
+@keyframes app-card-rise {
+  from { opacity: 0; transform: translateY(20px) scale(.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.app-ecosystem-card.consultas { border-top: 6px solid #2a9d90; }
+.app-ecosystem-card.farmacos { border-top: 6px solid #e89a32; }
+.app-ecosystem-card.historia { border-top: 6px solid #6675dd; }
+.app-ecosystem-card.featured { box-shadow: 0 24px 54px rgba(86,100,197,.19), 0 0 0 5px rgba(102,117,221,.045); }
+
+.app-ecosystem-index {
+  position: absolute;
+  right: 20px;
+  top: 12px;
+  color: #edf1f3;
+  font-size: clamp(40px,4vw,62px);
+  font-weight: 900;
+  letter-spacing: -.07em;
+}
+
+.app-ecosystem-icon {
+  width: clamp(50px,4.7vw,70px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(145deg,#268f87,#42b6aa);
+  box-shadow: 0 12px 28px rgba(42,157,144,.22);
+  font-size: clamp(16px,1.5vw,24px);
+  font-weight: 900;
+}
+.farmacos .app-ecosystem-icon { background: linear-gradient(145deg,#df8624,#f1ac47); box-shadow: 0 12px 28px rgba(232,154,50,.22); }
+.historia .app-ecosystem-icon { background: linear-gradient(145deg,#5968cf,#7f8ceb); box-shadow: 0 12px 28px rgba(102,117,221,.24); }
+
+.app-ecosystem-copy { position: relative; z-index: 2; margin-top: 18px; }
+.app-ecosystem-status { color: #7f8d94; font-size: 8px; font-weight: 900; letter-spacing: .14em; }
+.app-ecosystem-copy h3 { margin: 6px 0 0; color: #192832; font-size: clamp(18px,1.8vw,30px); line-height: 1.04; letter-spacing: -.035em; }
+.app-ecosystem-copy p { margin: 10px 0 0; color: #71818a; font-size: clamp(10px,.88vw,13px); line-height: 1.45; }
+
+.app-ecosystem-highlights { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.app-ecosystem-highlights span {
+  padding: 5px 8px;
+  border-radius: 999px;
+  color: #4b666e;
+  background: #f1f6f7;
+  font-size: 7px;
+  font-weight: 850;
+}
+
+.app-new-badge {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #fff;
+  background: #6675dd;
+  box-shadow: 0 7px 18px rgba(102,117,221,.25);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  animation: new-badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes new-badge-pulse {
+  0%,100% { transform: scale(1); box-shadow: 0 7px 18px rgba(102,117,221,.22); }
+  50% { transform: scale(1.05); box-shadow: 0 9px 24px rgba(102,117,221,.34); }
+}
+
+.app-card-glow {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -70px;
+  bottom: -80px;
+  border-radius: 50%;
+  background: rgba(42,157,144,.08);
+}
+.farmacos .app-card-glow { background: rgba(232,154,50,.09); }
+.historia .app-card-glow { background: rgba(102,117,221,.1); }
+
+.ecosystem-flow {
+  position: relative;
+  z-index: 4;
+  width: 66%;
+  height: 18px;
+  margin: 0 auto 10px;
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
+  align-items: center;
+}
+.ecosystem-flow-node { width: 10px; height: 10px; border-radius: 50%; background: #2a9d90; box-shadow: 0 0 0 5px rgba(42,157,144,.1); }
+.ecosystem-flow-node.node-2 { background: #e89a32; box-shadow: 0 0 0 5px rgba(232,154,50,.1); }
+.ecosystem-flow-node.node-3 { background: #6675dd; box-shadow: 0 0 0 5px rgba(102,117,221,.11); }
+.ecosystem-flow-line { position: relative; height: 2px; overflow: hidden; background: #dbe5e8; }
+.ecosystem-flow-line::after { content: ""; position: absolute; inset: 0; width: 28%; background: linear-gradient(90deg,transparent,#7db9be,transparent); animation: ecosystem-scan 2.1s linear infinite; }
+.ecosystem-flow-line:nth-of-type(4)::after { animation-delay: 1s; }
+@keyframes ecosystem-scan { from { transform: translateX(-120%); } to { transform: translateX(460%); } }
+
+@media (max-width: 820px) {
+  .patient-map-v2 .smart-connector { display: none; }
+  .billing-card.expanded { width: auto; }
+  .medical-modules { grid-template-columns: 1fr; }
+  .app-ecosystem-slide { min-height: 760px; padding: 24px; }
+  .app-ecosystem-grid { grid-template-columns: 1fr; align-items: stretch; }
+  .app-ecosystem-card { min-height: 160px; }
+  .ecosystem-flow { display: none; }
+}
+
+@media (max-width: 560px) {
+  .billing-breakdown { grid-template-columns: 1fr; }
+  .billing-collapse { grid-column: 1; }
+  .app-ecosystem-badge { display: none; }
+}
