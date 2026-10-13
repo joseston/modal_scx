@@ -1,14 +1,19 @@
 .ppt-workspace {
-  min-height: 100vh;
   width: 100%;
-  padding: clamp(20px, 2vw, 36px);
+  height: 100dvh;
+  min-height: 0;
+  padding: clamp(14px, 1.35vw, 24px);
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  gap: 12px;
   color: #17212b;
   background: #eef2f4;
 }
 
 .ppt-toolbar {
   width: 100%;
-  margin: 0 0 18px;
+  margin: 0;
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -17,56 +22,62 @@
 
 .ppt-toolbar-eyebrow {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: #217b84;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: .14em;
 }
 
 .ppt-toolbar h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: clamp(20px, 1.55vw, 26px);
   letter-spacing: -.03em;
 }
 
 .ppt-toolbar-count {
   min-width: 62px;
-  padding: 9px 12px;
+  padding: 8px 12px;
   border: 1px solid #d7e0e4;
   border-radius: 10px;
   color: #5f6f78;
   background: rgba(255,255,255,.84);
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 750;
   box-shadow: 0 4px 14px rgba(22, 40, 48, .05);
 }
 
 .ppt-slide-strip {
   width: 100%;
-  margin-bottom: 18px;
-  padding: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 8px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
-  scrollbar-width: thin;
+  overflow-y: hidden;
+  scrollbar-width: none;
   border: 1px solid #dce4e8;
-  border-radius: 16px;
-  background: rgba(255,255,255,.7);
-  box-shadow: 0 8px 26px rgba(23, 42, 50, .05);
+  border-radius: 14px;
+  background: rgba(255,255,255,.72);
+  box-shadow: 0 8px 24px rgba(23, 42, 50, .045);
+}
+
+.ppt-slide-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .ppt-slide-tab {
-  min-width: 210px;
+  min-width: 180px;
   flex: 1 1 0;
   display: grid;
-  grid-template-columns: 34px 84px minmax(0, 1fr);
+  grid-template-columns: 30px 72px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
-  padding: 9px 12px;
+  gap: 10px;
+  padding: 7px 10px;
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 10px;
   color: #60707a;
   background: transparent;
   text-align: left;
@@ -75,7 +86,7 @@
 
 .ppt-slide-tab:hover {
   border-color: #d6e4e7;
-  background: rgba(255,255,255,.92);
+  background: rgba(255,255,255,.94);
   transform: translateY(-1px);
 }
 
@@ -87,7 +98,7 @@
 }
 
 .ppt-slide-tab-number {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 850;
   letter-spacing: .06em;
   color: #8a98a0;
@@ -99,13 +110,13 @@
 
 .ppt-slide-tab-preview {
   position: relative;
-  width: 84px;
+  width: 72px;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid #dce4e8;
-  border-radius: 7px;
+  border-radius: 6px;
   background: #fff;
-  box-shadow: 0 3px 10px rgba(25, 42, 50, .08);
+  box-shadow: 0 3px 9px rgba(25, 42, 50, .08);
 }
 
 .ppt-slide-tab-accent {
@@ -117,18 +128,18 @@
 
 .ppt-slide-tab-line {
   position: absolute;
-  left: 15px;
-  top: 25px;
-  width: 38px;
+  left: 13px;
+  top: 21px;
+  width: 31px;
   height: 3px;
   border-radius: 99px;
   background: #d5dfe3;
 }
 
 .ppt-slide-tab-line.wide {
-  top: 14px;
-  width: 50px;
-  height: 5px;
+  top: 12px;
+  width: 42px;
+  height: 4px;
   background: #63747d;
 }
 
@@ -137,20 +148,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 760;
 }
 
 .ppt-stage-shell {
   width: 100%;
   min-width: 0;
+  min-height: 0;
   display: grid;
-  gap: 14px;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 10px;
+  overflow: hidden;
 }
 
 .ppt-stage {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .ppt-slide {
@@ -162,27 +179,27 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(46px, 6vw, 96px);
-  border-radius: 18px;
+  padding: clamp(38px, 5vw, 88px);
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 24px 60px rgba(16, 36, 45, .16);
+  box-shadow: 0 20px 54px rgba(16, 36, 45, .14);
 }
 
 .ppt-slide::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
-  width: 10px;
+  width: 9px;
   background: #217b84;
 }
 
 .ppt-slide::after {
   content: "";
   position: absolute;
-  width: min(32vw, 460px);
+  width: min(29vw, 420px);
   aspect-ratio: 1;
-  right: min(-10vw, -120px);
-  top: min(-11vw, -130px);
+  right: min(-9vw, -105px);
+  top: min(-10vw, -115px);
   border-radius: 50%;
   background: rgba(33,123,132,.07);
 }
@@ -192,10 +209,10 @@
 
 .ppt-slide-number {
   position: absolute;
-  right: clamp(32px, 4vw, 64px);
-  top: clamp(28px, 3.2vw, 52px);
+  right: clamp(28px, 3.6vw, 58px);
+  top: clamp(22px, 2.6vw, 42px);
   color: #d8e7e9;
-  font-size: clamp(48px, 5vw, 80px);
+  font-size: clamp(44px, 4.5vw, 72px);
   font-weight: 850;
   letter-spacing: -.06em;
 }
@@ -203,14 +220,14 @@
 .ppt-slide-content {
   position: relative;
   z-index: 2;
-  max-width: min(62vw, 980px);
+  max-width: min(65vw, 1040px);
 }
 
 .ppt-kicker {
   display: block;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   color: #217b84;
-  font-size: clamp(11px, .9vw, 14px);
+  font-size: clamp(10px, .8vw, 13px);
   font-weight: 850;
   letter-spacing: .16em;
 }
@@ -219,25 +236,25 @@
   margin: 0;
   max-width: 1000px;
   color: #14212b;
-  font-size: clamp(38px, 5vw, 78px);
+  font-size: clamp(38px, 4.7vw, 74px);
   line-height: .98;
   letter-spacing: -.055em;
 }
 
 .ppt-slide p {
-  max-width: 780px;
-  margin: 26px 0 0;
+  max-width: 800px;
+  margin: 22px 0 0;
   color: #667781;
-  font-size: clamp(17px, 1.65vw, 26px);
-  line-height: 1.45;
+  font-size: clamp(16px, 1.5vw, 24px);
+  line-height: 1.42;
 }
 
 .ppt-slide-footer {
   position: absolute;
-  left: clamp(46px, 6vw, 96px);
-  bottom: clamp(26px, 3vw, 42px);
+  left: clamp(38px, 5vw, 88px);
+  bottom: clamp(22px, 2.4vw, 36px);
   color: #9ba9b0;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: .14em;
 }
@@ -245,17 +262,18 @@
 .ppt-navigation {
   width: 100%;
   display: grid;
-  grid-template-columns: 120px 1fr 120px;
+  grid-template-columns: 112px 1fr 112px;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .ppt-navigation button {
-  height: 40px;
+  height: 36px;
   border: 1px solid #d7e0e4;
-  border-radius: 10px;
+  border-radius: 9px;
   color: #40515a;
   background: #fff;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -289,24 +307,33 @@
 }
 
 @media (max-width: 820px) {
-  .ppt-workspace { padding: 16px; }
-  .ppt-slide-strip { padding: 8px; }
-  .ppt-slide-tab { min-width: 190px; grid-template-columns: 28px 70px minmax(0, 1fr); }
-  .ppt-slide-tab-preview { width: 70px; }
-  .ppt-slide { border-radius: 14px; }
+  .ppt-workspace {
+    height: auto;
+    min-height: 100dvh;
+    padding: 14px;
+    overflow: auto;
+    display: block;
+  }
+
+  .ppt-toolbar { margin-bottom: 12px; }
+  .ppt-slide-strip { margin-bottom: 12px; padding: 7px; }
+  .ppt-slide-tab { min-width: 185px; grid-template-columns: 26px 64px minmax(0, 1fr); }
+  .ppt-slide-tab-preview { width: 64px; }
+  .ppt-stage-shell { overflow: visible; }
+  .ppt-stage { height: auto; aspect-ratio: 16 / 10; }
+  .ppt-slide { min-height: 0; border-radius: 14px; }
 }
 
 @media (max-width: 560px) {
   .ppt-workspace { padding: 10px; }
-  .ppt-toolbar { margin-bottom: 12px; }
   .ppt-toolbar h1 { font-size: 20px; }
-  .ppt-slide-strip { margin-bottom: 12px; border-radius: 12px; }
-  .ppt-slide-tab { min-width: 170px; grid-template-columns: 24px 58px minmax(0, 1fr); gap: 8px; padding: 7px 8px; }
-  .ppt-slide-tab-preview { width: 58px; }
+  .ppt-slide-strip { border-radius: 12px; }
+  .ppt-slide-tab { min-width: 165px; grid-template-columns: 22px 56px minmax(0, 1fr); gap: 7px; padding: 7px; }
+  .ppt-slide-tab-preview { width: 56px; }
   .ppt-stage { aspect-ratio: 16 / 10; }
-  .ppt-slide { padding: 30px; }
-  .ppt-slide-number { right: 24px; top: 20px; font-size: 40px; }
-  .ppt-slide-footer { left: 30px; bottom: 20px; }
-  .ppt-navigation { grid-template-columns: 100px 1fr 100px; }
-  .ppt-navigation button { font-size: 12px; }
+  .ppt-slide { padding: 28px; }
+  .ppt-slide-number { right: 22px; top: 18px; font-size: 38px; }
+  .ppt-slide-footer { left: 28px; bottom: 18px; }
+  .ppt-navigation { grid-template-columns: 94px 1fr 94px; }
+  .ppt-navigation button { font-size: 11px; }
 }
