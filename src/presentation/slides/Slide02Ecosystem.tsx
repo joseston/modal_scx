@@ -1,4 +1,6 @@
 import { ApplicationCard } from './components/ApplicationCard';
+import { DemographicsGate } from './components/DemographicsGate';
+import './slide02-gate.css';
 
 export function Slide02Ecosystem() {
   return (
@@ -6,12 +8,12 @@ export function Slide02Ecosystem() {
       <header className="app-ecosystem-heading">
         <div>
           <span className="ppt-kicker">CIATOB · ECOSISTEMA OPERATIVO</span>
-          <h2>Tres aplicaciones, un mismo flujo de información</h2>
+          <h2>Tres aplicaciones, con una validación obligatoria antes de la HCE</h2>
         </div>
-        <span className="app-ecosystem-badge">Operación integrada</span>
+        <span className="app-ecosystem-badge">Flujo con requisito</span>
       </header>
 
-      <div className="app-ecosystem-grid">
+      <div className="app-ecosystem-grid app-ecosystem-grid-gated">
         <ApplicationCard
           className="consultas"
           index="01"
@@ -32,16 +34,22 @@ export function Slide02Ecosystem() {
           highlights={['Ventas', 'Stock', 'Lotes']}
         />
 
+        <DemographicsGate />
+
         <ApplicationCard
           className="historia"
           index="03"
           icon="HC"
           status="NUEVO MÓDULO"
           title="Historia Clínica Electrónica"
-          subtitle="Información clínica centralizada y conectada al paciente."
+          subtitle="Se habilita únicamente cuando el paciente ya cuenta con sus datos demográficos mínimos."
           highlights={['Ficha 360°', 'Laboratorio', 'Archivos']}
           featured
         />
+      </div>
+
+      <div className="hce-prerequisite-note">
+        <strong>Regla:</strong> sin datos demográficos completos, no se habilita la Historia Clínica Electrónica.
       </div>
 
       <div className="ecosystem-flow" aria-hidden="true">
@@ -50,6 +58,8 @@ export function Slide02Ecosystem() {
         <span className="ecosystem-flow-node node-2" />
         <span className="ecosystem-flow-line" />
         <span className="ecosystem-flow-node node-3" />
+        <span className="ecosystem-flow-line" />
+        <span className="ecosystem-flow-node node-4" />
       </div>
 
       <div className="ppt-slide-footer">CIATOB · APLICACIONES DE OPERACIÓN</div>
