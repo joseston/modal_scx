@@ -1,39 +1,86 @@
-/* Slide 02 · datos demográficos como requisito de acceso a HCE */
-.app-ecosystem-grid-gated {
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(210px,.72fr) minmax(0,1fr);
-  gap: clamp(10px,1.05vw,18px);
+/* Slide 02 · flujo horizontal: apps → validación demográfica → HCE */
+.app-ecosystem-slide {
+  padding: clamp(20px,2vw,34px) clamp(26px,3vw,50px) clamp(24px,2.3vw,38px);
+}
+
+.app-ecosystem-slide .app-ecosystem-heading h2 {
+  max-width: 980px;
+  font-size: clamp(24px,2.15vw,36px);
+  line-height: 1.02;
+}
+
+.app-ecosystem-grid.app-ecosystem-grid-gated {
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,.92fr) minmax(0,1.08fr) !important;
+  gap: clamp(12px,1vw,18px);
+  align-items: stretch;
+  margin-top: 12px;
+}
+
+.app-ecosystem-grid-gated > * {
+  min-width: 0;
+  align-self: stretch;
 }
 
 .app-ecosystem-grid-gated .app-ecosystem-card {
-  min-height: clamp(210px,26vh,290px);
-  padding: clamp(16px,1.65vw,26px);
+  min-height: clamp(245px,29vh,320px);
+  height: 100%;
+  padding: clamp(18px,1.55vw,26px);
+  justify-content: center;
+}
+
+.app-ecosystem-grid-gated .app-ecosystem-icon {
+  width: clamp(54px,4vw,66px);
+  border-radius: 16px;
+  font-size: clamp(18px,1.35vw,23px);
+}
+
+.app-ecosystem-grid-gated .app-ecosystem-status {
+  font-size: clamp(9px,.58vw,10.5px);
+}
+
+.app-ecosystem-grid-gated .app-ecosystem-copy {
+  margin-top: 15px;
 }
 
 .app-ecosystem-grid-gated .app-ecosystem-copy h3 {
-  font-size: clamp(17px,1.45vw,25px);
+  margin-top: 7px;
+  font-size: clamp(21px,1.55vw,28px);
+  line-height: 1.04;
 }
 
 .app-ecosystem-grid-gated .app-ecosystem-copy p {
-  font-size: clamp(10px,.78vw,12.5px);
+  margin-top: 9px;
+  font-size: clamp(12px,.82vw,14px);
+  line-height: 1.42;
+}
+
+.app-ecosystem-grid-gated .app-ecosystem-highlights {
+  margin-top: 14px;
+  gap: 6px;
+}
+
+.app-ecosystem-grid-gated .app-ecosystem-highlights span {
+  padding: 6px 9px;
+  font-size: clamp(8.5px,.54vw,10px);
 }
 
 .demographics-gate {
   position: relative;
   min-width: 0;
-  min-height: clamp(230px,29vh,315px);
-  align-self: center;
+  min-height: clamp(245px,29vh,320px);
+  height: 100%;
   overflow: visible;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(16px,1.6vw,24px);
+  padding: clamp(17px,1.45vw,24px);
   border: 2px solid #4d9cc5;
   border-radius: 20px;
   background:
     radial-gradient(circle at 50% 0%, rgba(77,156,197,.18), transparent 38%),
     linear-gradient(180deg,#f8fcff 0%,#eef7fb 100%);
-  box-shadow: 0 20px 48px rgba(48,105,135,.16), 0 0 0 6px rgba(77,156,197,.055);
-  animation: demographics-gate-in .7s .28s cubic-bezier(.2,.8,.2,1) both;
+  box-shadow: 0 18px 40px rgba(48,105,135,.14), 0 0 0 5px rgba(77,156,197,.045);
+  animation: demographics-gate-in .65s .28s cubic-bezier(.2,.8,.2,1) both;
 }
 
 .demographics-gate::before,
@@ -41,13 +88,17 @@
   content: "";
   position: absolute;
   top: 50%;
-  width: clamp(18px,1.8vw,30px);
+  width: clamp(12px,1.1vw,20px);
   height: 3px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg,#c6dce6,#4d9cc5);
+  z-index: 3;
 }
 
-.demographics-gate::before { right: 100%; }
+.demographics-gate::before {
+  right: 100%;
+  background: linear-gradient(90deg,#d3e2e9,#4d9cc5);
+}
+
 .demographics-gate::after {
   left: 100%;
   background: linear-gradient(90deg,#4d9cc5,#6675dd);
@@ -55,9 +106,9 @@
 
 .demographics-gate-lock {
   position: relative;
-  width: clamp(48px,4vw,62px);
-  height: clamp(52px,4.4vw,68px);
-  margin: 0 auto 12px;
+  width: clamp(48px,3.5vw,58px);
+  height: clamp(52px,3.9vw,64px);
+  margin: 0 auto 10px;
   display: grid;
   place-items: end center;
 }
@@ -82,37 +133,37 @@
   border-radius: 13px;
   color: #fff;
   background: linear-gradient(145deg,#3d8fb8,#62b1d6);
-  box-shadow: 0 10px 22px rgba(77,156,197,.28);
-  font-size: clamp(15px,1.3vw,22px);
+  box-shadow: 0 10px 22px rgba(77,156,197,.25);
+  font-size: clamp(16px,1.15vw,20px);
   font-weight: 900;
 }
 
 .demographics-gate-status {
   color: #377f9f;
-  font-size: clamp(8px,.58vw,10px);
+  font-size: clamp(9px,.56vw,10px);
   font-weight: 900;
-  letter-spacing: .13em;
+  letter-spacing: .11em;
   text-align: center;
 }
 
 .demographics-gate h3 {
   margin: 6px 0 0;
   color: #18384a;
-  font-size: clamp(17px,1.38vw,24px);
+  font-size: clamp(20px,1.35vw,24px);
   line-height: 1.05;
   text-align: center;
 }
 
 .demographics-gate p {
   margin: 8px 0 0;
-  color: #688493;
-  font-size: clamp(10px,.72vw,12px);
-  line-height: 1.42;
+  color: #5f7c8a;
+  font-size: clamp(11.5px,.72vw,13px);
+  line-height: 1.38;
   text-align: center;
 }
 
 .demographics-gate-fields {
-  margin-top: 12px;
+  margin-top: 11px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -124,19 +175,19 @@
   border: 1px solid #d5e8f1;
   border-radius: 999px;
   color: #477789;
-  background: rgba(255,255,255,.9);
-  font-size: clamp(8px,.54vw,9px);
+  background: rgba(255,255,255,.94);
+  font-size: clamp(8.5px,.5vw,9.5px);
   font-weight: 800;
 }
 
 .demographics-gate-footer {
-  margin-top: 12px;
+  margin-top: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   color: #2f7d69;
-  font-size: clamp(9px,.64vw,10.5px);
+  font-size: clamp(10px,.6vw,11px);
   font-weight: 850;
 }
 
@@ -157,30 +208,31 @@
   content: "HABILITADA POR DATOS DEMOGRÁFICOS";
   position: absolute;
   left: 16px;
-  top: 14px;
+  top: 13px;
   z-index: 3;
   padding: 5px 8px;
   border-radius: 999px;
   color: #4b5bc0;
   background: #eef0ff;
-  font-size: clamp(7px,.48vw,8.5px);
+  font-size: clamp(7.5px,.45vw,8.5px);
   font-weight: 900;
-  letter-spacing: .08em;
+  letter-spacing: .07em;
 }
 
 .hce-prerequisite-note {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(12px,1.6vw,22px);
+  position: relative;
+  left: auto;
+  bottom: auto;
   z-index: 4;
-  transform: translateX(-50%);
-  padding: 7px 11px;
+  transform: none;
+  margin: 4px auto 0;
+  padding: 7px 12px;
   border: 1px solid #cfe0e8;
   border-radius: 999px;
   color: #52717f;
-  background: rgba(255,255,255,.9);
-  box-shadow: 0 7px 20px rgba(31,65,80,.08);
-  font-size: clamp(9px,.62vw,10.5px);
+  background: rgba(255,255,255,.94);
+  box-shadow: 0 7px 18px rgba(31,65,80,.07);
+  font-size: clamp(9.5px,.6vw,11px);
   font-weight: 800;
   white-space: nowrap;
 }
@@ -188,7 +240,9 @@
 .hce-prerequisite-note strong { color: #3d7f9c; }
 
 .app-ecosystem-slide .ecosystem-flow {
-  width: 78%;
+  width: 82%;
+  margin-top: 2px;
+  margin-bottom: 4px;
   grid-template-columns: auto 1fr auto 1fr auto 1fr auto;
 }
 
@@ -207,7 +261,7 @@
 }
 
 @keyframes demographics-gate-in {
-  from { opacity: 0; transform: translateY(18px) scale(.96); }
+  from { opacity: 0; transform: translateY(14px) scale(.975); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
@@ -223,18 +277,31 @@
 }
 
 @media (max-width: 1180px) {
-  .app-ecosystem-grid-gated {
-    grid-template-columns: repeat(4,minmax(0,1fr));
+  .app-ecosystem-grid.app-ecosystem-grid-gated {
+    grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+    gap: 9px;
   }
-  .demographics-gate { min-width: 0; }
+
+  .app-ecosystem-grid-gated .app-ecosystem-card,
+  .demographics-gate {
+    min-height: 230px;
+    padding: 14px;
+  }
+
   .demographics-gate-fields span:nth-child(n+3) { display: none; }
 }
 
 @media (max-width: 820px) {
-  .app-ecosystem-grid-gated {
-    grid-template-columns: 1fr;
+  .app-ecosystem-grid.app-ecosystem-grid-gated {
+    grid-template-columns: 1fr !important;
   }
+
   .demographics-gate::before,
   .demographics-gate::after { display: none; }
-  .hce-prerequisite-note { position: static; transform: none; margin: 12px auto 0; white-space: normal; text-align: center; }
+
+  .hce-prerequisite-note {
+    margin: 12px auto 0;
+    white-space: normal;
+    text-align: center;
+  }
 }
