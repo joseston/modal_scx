@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BillingCard } from './components/BillingCard';
 import { MedicalCard } from './components/MedicalCard';
 import { PatientInfoCard } from './components/PatientInfoCard';
+import './slide01-readability.css';
 
 export function Slide01Interactive() {
   const [billingExpanded, setBillingExpanded] = useState(false);
