@@ -29,10 +29,10 @@ export function Slide01Interactive() {
           title="Datos demográficos"
           icon="◎"
           rows={[
-            ['Edad', 'Ejemplo'],
-            ['Sexo', 'Ejemplo'],
-            ['Distrito', 'Ejemplo'],
-            ['Nacimiento', 'dd/mm/aaaa']
+            ['Edad', '42 años'],
+            ['Sexo', 'Masculino'],
+            ['Distrito', 'Santiago de Surco'],
+            ['Nacimiento', '12/04/1984']
           ]}
         />
 
@@ -45,18 +45,18 @@ export function Slide01Interactive() {
           title="Datos de archivos"
           icon="▤"
           rows={[
-            ['Historia clínica', 'PDF'],
-            ['Laboratorios', 'Archivos'],
-            ['Imágenes', 'Archivos'],
-            ['Última carga', 'dd/mm/aaaa']
+            ['Historia clínica', 'HC-008421.pdf'],
+            ['Laboratorios', '6 informes'],
+            ['Imágenes', '3 archivos'],
+            ['Última carga', '12/10/2026']
           ]}
         />
 
         <article className="patient-core-card">
-          <div className="patient-avatar-placeholder" aria-hidden="true">PD</div>
-          <span className="patient-core-label">PACIENTE</span>
-          <h3>Paciente de ejemplo</h3>
-          <p>DNI 00000000</p>
+          <div className="patient-avatar-placeholder" aria-hidden="true">CM</div>
+          <span className="patient-core-label">PACIENTE DEMOSTRATIVO</span>
+          <h3>Carlos Mendoza R.</h3>
+          <p>DNI ***4512 · HC-008421</p>
           <div className="patient-core-status"><span /> Perfil activo</div>
         </article>
       </div>
